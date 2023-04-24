@@ -1,0 +1,15 @@
+#!/bin/bash
+if [ -z "$1" ]; then
+    echo "Usage: $0 component-name [component-parameters-name=component-parameters-value ...]"
+    exit 1
+fi
+
+image=$1
+envs=""
+shift
+for var in "$@"
+do
+    envs="${envs} --env ${var}"
+done
+
+docker run -it $envs romeokienzler/$image
