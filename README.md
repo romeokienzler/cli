@@ -2,7 +2,7 @@
 CLAIMED CLI - all components available via cli at your fingertips
 
 ## installation
-sudo curl -o /usr/bin/claimed https://raw.githubusercontent.com/claimed-framework/cli/main/claimed
+sudo curl -o /usr/bin/claimed https://raw.githubusercontent.com/claimed-framework/cli/main/claimed  
 sudo chmod 755 /usr/bin/claimed
 
 ## example usage
