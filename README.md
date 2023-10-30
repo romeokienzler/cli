@@ -1,9 +1,21 @@
 # cli
 CLAIMED CLI - all components available via cli at your fingertips
 
-## installation
+## Installation
+
+```bash
 sudo curl -o /usr/local/bin/claimed https://raw.githubusercontent.com/claimed-framework/cli/main/claimed  
 sudo chmod 755 /usr/local/bin/claimed
+```
 
-## example usage
+## Example usage
+Run an operator locally:
+```bash
 claimed claimed-util-cos:0.3 access_key_id="xxx" secret_access_key="yyy" endpoint="https://s3.us-east.cloud-object-storage.appdomain.cloud" bucket_name="era5-cropscape-zarr" path="/" recursive=True operation=ls
+```
+
+Create operators using [C3](https://github.com/claimed-framework/c3):
+```bash
+claimed create operator <file> -r <repository>
+```
+
