@@ -64,8 +64,8 @@ fi
 
 if [ -z ${CLAIMED_DATA_PATH+x} ]; then
   echo "CLAIMED_DATA_PATH variable not set, not mounting /data to the CLAIMED component"
-  docker run -it $envs $image
+  docker run $envs $image
 else
   echo "CLAIMED_DATA_PATH variable is set, mounting $CLAIMED_DATA_PATH to /data"
-  docker run -it $envs -u 1000 -v `echo $CLAIMED_DATA_PATH`:/opt/app-root/src/data $image
+  docker run $envs -u 1000 -v `echo $CLAIMED_DATA_PATH`:/opt/app-root/src/data $image
 fi
