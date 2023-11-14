@@ -7,14 +7,16 @@ CLAIMED CLI - all components available via cli at your fingertips
 pip install claimed
 ```
 
-## Example usage
+## Usage
 Run an operator locally:
 ```bash
-claimed claimed-util-cos:0.3 access_key_id="xxx" secret_access_key="yyy" endpoint="https://s3.us-east.cloud-object-storage.appdomain.cloud" bucket_name="era5-cropscape-zarr" path="/" recursive=True operation=ls
+claimed --component component-name [--component-parameters-name component-parameters-value ...]
+
+# Example
+claimed --component blumenstiel/claimed-generate-random-numbers --num_random 5
 ```
 
 Create operators using [C3](https://github.com/claimed-framework/c3):
 ```bash
-claimed create operator <file> -r <repository>
+claimed create operator <file> -r <repository> -v <version>
 ```
-
