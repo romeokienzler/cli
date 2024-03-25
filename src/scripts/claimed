@@ -67,5 +67,5 @@ if [ -z ${CLAIMED_DATA_PATH+x} ]; then
   docker run $envs $image
 else
   echo "CLAIMED_DATA_PATH variable is set, mounting $CLAIMED_DATA_PATH to /opt/app-root/src/data"
-  docker run $envs -u 1000 -v `echo $CLAIMED_DATA_PATH`:/opt/app-root/src/data $image
+  docker run $envs -u 0 -v `echo $CLAIMED_DATA_PATH`:/opt/app-root/src/data:z $image
 fi
