@@ -67,6 +67,13 @@ else
     echo "CLAIMED_CONTAINERLESS_OPERATOR_PATH not set, aborting"
     exit 1
   else
-    
+    containerlesscomponentpath=`sed "s/containerless//g" <<< "$image"`
+    containerlesscomponentpath=`sed "s/:/./g" <<< "$containerlesscomponentpath"`
+    containerlesscomponent=$containerlesscomponentpath"/runnable.py"
+    command="python "$CLAIMED_CONTAINERLESS_OPERATOR_PATH"/"$containerlesscomponent" "$envs                                                                                               
+    echo "Executing: "$command
+    source $CLAIMED_CONTAINERLESS_OPERATOR_PATH'/'$containerlesscomponentpath"/claimedenv/bin/activate"
+    chmod 755 $CLAIMED_CONTAINERLESS_OPERATOR_PATH"/"$containerlesscomponent
+    $command
   fi
 fi
