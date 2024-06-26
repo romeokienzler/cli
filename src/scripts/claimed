@@ -29,7 +29,6 @@ fi
 
 envs=""
 if [[ $1 == "--component" ]]; then
-  echo  "Assuming arguments in format '--argument_name argument_value'"
   image=$2
   shift 2
   for var in "$@"; do
@@ -40,32 +39,41 @@ if [[ $1 == "--component" ]]; then
     fi
   done
 else
-  echo "Assuming arguments contain = sign (deprecated)"
-  image=$1
-  envs=""
-  shift
-  for var in "$@"
-  do
-    envs="${envs} --env ${var}"
-  done
+  echo "Assuming arguments contain = sign, you need to provide the --component to run, aborting"
+  exit 1
 fi
 
 
 
 if [[ "$image" != */* ]]; then
-  image=romeokienzler/$image
+  image=docker.io/claimed/$image
 fi
 
 if [[ "$image" != *:* ]]; then
-  docker pull $image:latest
   image=$image:latest
 fi
 
-
-if [ -z ${CLAIMED_DATA_PATH+x} ]; then
-  echo "CLAIMED_DATA_PATH variable not set, not mounting /data to the CLAIMED component"
-  docker run $envs $image
+if [[ "$image" != *containerless* ]]; then
+  if [ -z ${CLAIMED_DATA_PATH+x} ]; then
+    echo "CLAIMED_DATA_PATH variable not set, not mounting /data to the CLAIMED component"
+    docker run $envs $image
+  else
+    echo "CLAIMED_DATA_PATH variable is set, mounting $CLAIMED_DATA_PATH to /opt/app-root/src/data"
+    docker run $envs -u 0 -v `echo $CLAIMED_DATA_PATH`:/opt/app-root/src/data:z $image
+  fi
 else
-  echo "CLAIMED_DATA_PATH variable is set, mounting $CLAIMED_DATA_PATH to /opt/app-root/src/data"
-  docker run $envs -u 0 -v `echo $CLAIMED_DATA_PATH`:/opt/app-root/src/data:z $image
+  echo "Entering containerless operation"
+  if [ -z ${CLAIMED_CONTAINERLESS_OPERATOR_PATH+x} ]; then
+    echo "CLAIMED_CONTAINERLESS_OPERATOR_PATH not set, aborting"
+    exit 1
+  else
+    containerlesscomponentpath=`sed "s/containerless//g" <<< "$image"`
+    containerlesscomponentpath=`sed "s/:/./g" <<< "$containerlesscomponentpath"`
+    containerlesscomponent=$containerlesscomponentpath"/runnable.py"
+    command="python "$CLAIMED_CONTAINERLESS_OPERATOR_PATH"/"$containerlesscomponent" "$envs                                                                                               
+    echo "Executing: "$command
+    source $CLAIMED_CONTAINERLESS_OPERATOR_PATH'/'$containerlesscomponentpath"/claimedenv/bin/activate"
+    chmod 755 $CLAIMED_CONTAINERLESS_OPERATOR_PATH"/"$containerlesscomponent
+    $command
+  fi
 fi
